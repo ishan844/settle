@@ -2,9 +2,8 @@
 <html lang="en">
 
 <head>
- <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="icon" href="/favicon.ico" />
-  
+
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Expense Tracker — Overview</title>
@@ -12,6 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
     rel="stylesheet" />
   <script src="https://unpkg.com/@phosphor-icons/web@2.1.1"></script>
+  <script src="https://unpkg.com/@capacitor/core@latest/dist/capacitor.js"></script>
   <style>
     *,
     *::before,
@@ -246,7 +246,6 @@
       }
     }
 
-    }
 
     /* ===== YOU VIEW CSS ===== */
     #youView {
@@ -262,6 +261,7 @@
       margin-bottom: 40px;
       padding: 0 24px;
     }
+
     .profile-avatar {
       width: 80px;
       height: 80px;
@@ -271,22 +271,25 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
-      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       position: relative;
     }
+
     .profile-avatar::after {
       content: "";
       position: absolute;
       inset: 0;
       border-radius: inherit;
-      box-shadow: inset -2px -2px 10px rgba(255,255,255,0.1), inset 2px 2px 10px rgba(255,255,255,0.2);
+      box-shadow: inset -2px -2px 10px rgba(255, 255, 255, 0.1), inset 2px 2px 10px rgba(255, 255, 255, 0.2);
       pointer-events: none;
     }
+
     .profile-avatar i {
       font-size: 40px;
       color: #b3b3b3;
     }
+
     .profile-name {
       font-size: 24px;
       font-weight: 600;
@@ -294,6 +297,7 @@
       margin-bottom: 4px;
       letter-spacing: -0.5px;
     }
+
     .profile-joined {
       font-size: 13px;
       color: #777;
@@ -305,6 +309,7 @@
       margin: 0 16px 24px;
       padding: 8px 0;
     }
+
     .settings-row {
       display: flex;
       align-items: center;
@@ -313,14 +318,17 @@
       cursor: pointer;
       transition: background 0.2s ease;
     }
+
     .settings-row:active {
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
     }
+
     .settings-row-left {
       display: flex;
       align-items: center;
       gap: 16px;
     }
+
     .settings-icon {
       width: 38px;
       height: 38px;
@@ -329,24 +337,28 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 1px 1px rgba(255,255,255,0.05);
+      box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
     }
+
     .settings-icon i {
       font-size: 20px;
       color: #ccc;
     }
+
     .settings-label {
       font-size: 16px;
       font-weight: 500;
       color: #e6e6e6;
     }
+
     .settings-row-right i {
       font-size: 18px;
       color: #666;
     }
+
     .settings-divider {
       height: 1px;
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       margin: 0 20px;
     }
 
@@ -3105,11 +3117,198 @@
       margin: 0;
       padding-left: 4px;
     }
+
+    /* ===== AUTH VIEW ===== */
+    #authView {
+      background-color: #0d0d0d;
+      display: none;
+      z-index: 20;
+      padding: 0 32px;
+      text-align: left;
+    }
+
+    #authView.active {
+      display: block; /* use block for proper top alignment */
+    }
+
+    .auth-step {
+      display: none;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 100%;
+      padding-bottom: 60px; /* Space from bottom */
+      position: relative;
+      z-index: 10;
+      transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1);
+    }
+
+    #authView.keyboard-up .auth-step {
+      transform: translateY(-280px);
+    }
+
+    .auth-step.active {
+      display: flex;
+    }
+
+    .auth-orb-bg {
+      position: absolute;
+      top: -100px;
+      left: -100px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle at 50% 30%, rgba(200, 120, 58, 0.2) 0%, rgba(200, 120, 58, 0) 60%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .auth-title-group {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      align-self: flex-start;
+      margin-bottom: 40px;
+    }
+
+    .auth-dots-container {
+      margin-bottom: 36px;
+    }
+
+    .auth-hero-title {
+      font-size: 26px;
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.3;
+      margin-bottom: 40px;
+      letter-spacing: -0.5px;
+    }
+
+    .auth-section-title {
+      font-size: 18px;
+      font-weight: 400;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .auth-subtitle {
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 32px;
+    }
+
+    .auth-form {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .auth-input-line {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0;
+      padding: 12px 0;
+      color: #fff;
+      font-family: var(--font);
+      font-size: 15px;
+      outline: none;
+      transition: all 0.2s ease;
+      margin-bottom: 16px;
+    }
+
+    .auth-input-line:focus {
+      border-bottom-color: var(--orb-primary);
+    }
+
+    .auth-input-line::placeholder {
+      color: #555;
+    }
+
+    .otp-boxes {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .otp-box {
+      width: 50px;
+      height: 50px;
+      background: rgba(38, 38, 38, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 20px;
+      text-align: center;
+      font-family: var(--font);
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .otp-box:focus {
+      border-color: var(--orb-primary);
+      background: rgba(45, 45, 45, 0.8);
+    }
+
+    .resend-link {
+      font-size: 12px;
+      color: var(--orb-primary);
+      text-decoration: none;
+      margin-bottom: 40px;
+      display: inline-block;
+    }
+
+    .auth-button {
+      background: #fff;
+      color: #0d0d0d;
+      border: none;
+      border-radius: 14px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      transition: transform 0.1s ease, opacity 0.2s ease, visibility 0.2s ease;
+      width: 100%;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .auth-button.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .auth-button:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    .demo-mode-link {
+      text-align: center;
+      margin-top: 16px;
+    }
+
+    .demo-mode-link a {
+      color: #999;
+      font-size: 14px;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .demo-mode-link a:hover {
+      color: #fff;
+    }
+
+    .phone-frame.auth-active .bottom-nav {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
-  <div class="phone-frame">
+  <div class="phone-frame auth-active">
     <div class="particle-container"></div>
 
     <!-- Status Bar -->
@@ -3137,8 +3336,81 @@
       </div>
     </div>
 
+    <!-- AUTH VIEW (#authView) -->
+    <div id="authView" class="view-container active">
+      <div class="auth-orb-bg"></div>
+
+      <!-- Step 1: Login -->
+      <div class="auth-step active" id="loginStep">
+        <div class="auth-title-group">
+          <div class="auth-dots-container">
+            <div class="all-clear-spheres-group" style="position: relative; left: 0; top: 0; transform: scale(2); transform-origin: center; width: 20px; height: 18px; margin-top: 10px; opacity: 0.6;">
+              <div class="ac-sphere big"></div>
+              <div class="ac-sphere small-left"></div>
+              <div class="ac-sphere small-right"></div>
+            </div>
+          </div>
+          
+          <div class="auth-hero-title" style="margin-bottom: 0;">
+            Track with ease<br />
+            Stay in control
+          </div>
+        </div>
+        
+        <div class="auth-section-title">Login</div>
+        <div class="auth-subtitle">Please enter your mobile number</div>
+        
+        <div class="auth-form">
+          <input type="tel" class="auth-input-line" placeholder="Mobile number" id="mobileInput" />
+          
+          <button class="auth-button" id="continueBtn">
+            Continue
+          </button>
+        </div>
+
+        <div class="demo-mode-link">
+          <a href="#" id="demoModeBtn">Demo mode</a>
+        </div>
+      </div>
+
+      <!-- Step 2: OTP -->
+      <div class="auth-step" id="otpStep">
+        <div class="auth-title-group">
+          <div class="auth-dots-container">
+            <div class="all-clear-spheres-group" style="position: relative; left: 0; top: 0; transform: scale(2); transform-origin: center; width: 20px; height: 18px; margin-top: 10px; opacity: 0.6;">
+              <div class="ac-sphere big"></div>
+              <div class="ac-sphere small-left"></div>
+              <div class="ac-sphere small-right"></div>
+            </div>
+          </div>
+          
+          <div class="auth-hero-title" style="margin-bottom: 0;">
+            Secure your<br />
+            Account easily
+          </div>
+        </div>
+        
+        <div class="auth-section-title">OTP</div>
+        <div class="auth-subtitle">You got a otp number +91 89239 2389 in this mobile number.</div>
+        
+        <div class="auth-form">
+          <div class="otp-boxes">
+            <input type="tel" class="otp-box" maxlength="1" />
+            <input type="tel" class="otp-box" maxlength="1" />
+            <input type="tel" class="otp-box" maxlength="1" />
+            <input type="tel" class="otp-box" maxlength="1" />
+          </div>
+          <a href="#" class="resend-link">Resend again</a>
+          
+          <button class="auth-button" id="loginBtn">
+            Confirm
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- HOME VIEW (#homeView) -->
-    <div id="homeView" class="view-container active">
+    <div id="homeView" class="view-container">
       <!-- Header -->
       <div class="header-content">
         <div class="period">Through October</div>
@@ -3949,30 +4221,41 @@
       </div>
 
       <!-- Budget Card (Completed) -->
-      <div class="budget-card" id="budgetCardCompleted" style="display: none; padding: 20px; background: rgba(26,26,26,0.5); border-radius: 28px; flex-direction: column; gap: 16px;">
+      <div class="budget-card" id="budgetCardCompleted"
+        style="display: none; padding: 20px; background: rgba(26,26,26,0.5); border-radius: 28px; flex-direction: column; gap: 16px;">
         <!-- Top Half: Total Spent / Remaining -->
         <div style="display: flex; flex-direction: column; gap: 28px; width: 100%;">
           <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
             <div style="display: flex; flex-direction: column; gap: 8px;">
-              <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 10px; color: #808080; letter-spacing: 0.5px; text-transform: uppercase;">Total Spent</span>
-              <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 23px; color: #fff; line-height: 1;">₹18,590</span>
+              <span
+                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 10px; color: #808080; letter-spacing: 0.5px; text-transform: uppercase;">Total
+                Spent</span>
+              <span
+                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 23px; color: #fff; line-height: 1;">₹18,590</span>
             </div>
             <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
-              <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 10px; color: #808080; letter-spacing: 0.5px; text-transform: uppercase;">Remaining</span>
-              <span style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 23px; color: #75bd75; line-height: 1;">₹7,450</span>
+              <span
+                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 600; font-size: 10px; color: #808080; letter-spacing: 0.5px; text-transform: uppercase;">Remaining</span>
+              <span
+                style="font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 23px; color: #75bd75; line-height: 1;">₹7,450</span>
             </div>
           </div>
-          
+
           <!-- Progress Bar -->
-          <div style="position: relative; width: 100%; height: 3px; background: #333; border-radius: 28px; display: flex; align-items: center;">
-            <div style="position: absolute; left: 0; width: 72.61%; height: 3px; border-radius: 28px; background: #dcd9e9;">
-              <div style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; border-radius: 50%; background: #ffffff; box-shadow: 0 0 10px 4px rgba(255,255,255,0.4);"></div>
+          <div
+            style="position: relative; width: 100%; height: 3px; background: #333; border-radius: 28px; display: flex; align-items: center;">
+            <div
+              style="position: absolute; left: 0; width: 72.61%; height: 3px; border-radius: 28px; background: #dcd9e9;">
+              <div
+                style="position: absolute; right: -3px; top: 50%; transform: translateY(-50%); width: 6px; height: 6px; border-radius: 50%; background: #ffffff; box-shadow: 0 0 10px 4px rgba(255,255,255,0.4);">
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Bottom Text -->
-        <div style="display: flex; justify-content: space-between; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 11px; color: #999; letter-spacing: -0.11px;">
+        <div
+          style="display: flex; justify-content: space-between; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 500; font-size: 11px; color: #999; letter-spacing: -0.11px;">
           <span>Budget: ₹25,000</span>
           <span>18 days left</span>
         </div>
@@ -4030,7 +4313,8 @@
         </div>
       </div>
 
-      <div style="text-align: center; margin-top: 32px; margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; font-size: 11px; color: #808080; letter-spacing: -0.11px;">
+      <div
+        style="text-align: center; margin-top: 32px; margin-bottom: 24px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 400; font-size: 11px; color: #808080; letter-spacing: -0.11px;">
         Tap category to select
       </div>
 
@@ -4233,7 +4517,8 @@
       <div class="settings-group">
         <div class="settings-row">
           <div class="settings-row-left">
-            <div class="settings-icon" style="background: rgba(200, 50, 50, 0.1);"><i class="ph-fill ph-sign-out" style="color: #ed5f5f;"></i></div>
+            <div class="settings-icon" style="background: rgba(200, 50, 50, 0.1);"><i class="ph-fill ph-sign-out"
+                style="color: #ed5f5f;"></i></div>
             <div class="settings-label" style="color: #ed5f5f;">Sign Out</div>
           </div>
         </div>
@@ -4486,7 +4771,8 @@
             What goes out every month?</h2>
           <p
             style="color: #b3b3b3; font-size: 13px; font-weight: 400; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0;">
-            We'll auto-categorise these. Nothing to log manually.<span id="categoryLimitTotalAmount" style="display: none;">₹ 25,000</span></p>
+            We'll auto-categorise these. Nothing to log manually.<span id="categoryLimitTotalAmount"
+              style="display: none;">₹ 25,000</span></p>
         </div>
 
         <div id="categoryLimitList" style="display: flex; flex-direction: column; gap: 4px; width: 100%; padding: 0;">
@@ -6594,8 +6880,118 @@
         catLimitSkipBtn.addEventListener('click', () => closeCategoryLimitFlow(false));
       }
 
+      // Auth Flow Logic
+      const mobileInput = document.getElementById('mobileInput');
+      const continueBtn = document.getElementById('continueBtn');
+      const loginBtn = document.getElementById('loginBtn');
+      const demoModeBtn = document.getElementById('demoModeBtn');
+      const loginStep = document.getElementById('loginStep');
+      const otpStep = document.getElementById('otpStep');
+
+      // Auth view keyboard shift logic
+      const authViewEl = document.getElementById('authView');
+      const mkEl = document.getElementById('mockKeyboard');
+      if (mkEl && authViewEl) {
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+              if (mkEl.classList.contains('active')) {
+                authViewEl.classList.add('keyboard-up');
+              } else {
+                authViewEl.classList.remove('keyboard-up');
+              }
+            }
+          });
+        });
+        observer.observe(mkEl, { attributes: true });
+      }
+
+      const showMockKeyboard = function(target) {
+        if (typeof activeAmtInput !== 'undefined') {
+          activeAmtInput = target;
+        }
+        const mk = document.getElementById("mockKeyboard");
+        if (mk) {
+          mk.classList.add("active");
+        }
+      };
+
+      if (mobileInput) {
+        mobileInput.addEventListener('focus', (e) => showMockKeyboard(e.target));
+        mobileInput.addEventListener('click', (e) => showMockKeyboard(e.target));
+        mobileInput.addEventListener('input', function() {
+          if (this.value.trim().length > 0) {
+            continueBtn.classList.add('visible');
+          } else {
+            continueBtn.classList.remove('visible');
+          }
+        });
+      }
+
+      if (continueBtn) {
+        continueBtn.addEventListener('click', function() {
+          loginStep.classList.remove('active');
+          otpStep.classList.add('active');
+          const mk = document.getElementById("mockKeyboard");
+          if (mk) mk.classList.remove("active");
+        });
+      }
+
+      const goToHome = function() {
+        const authView = document.getElementById('authView');
+        const homeView = document.getElementById('homeView');
+        const phoneFrame = document.querySelector('.phone-frame');
+        const mk = document.getElementById("mockKeyboard");
+        if (mk) mk.classList.remove("active");
+        
+        authView.classList.remove('active');
+        homeView.classList.add('active');
+        phoneFrame.classList.remove('auth-active');
+      };
+
+      if (loginBtn) {
+        loginBtn.addEventListener('click', goToHome);
+      }
+
+      if (demoModeBtn) {
+        demoModeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          goToHome();
+        });
+      }
+
+      // Auto-focus next OTP box
+      const otpBoxes = document.querySelectorAll('.otp-box');
+      otpBoxes.forEach((box, index) => {
+        box.addEventListener('focus', (e) => showMockKeyboard(e.target));
+        box.addEventListener('click', (e) => showMockKeyboard(e.target));
+        
+        box.addEventListener('input', function() {
+          if (this.value.length === 1 && index < otpBoxes.length - 1) {
+            otpBoxes[index + 1].focus();
+          }
+          
+          let allFilled = true;
+          otpBoxes.forEach(b => {
+            if (b.value.trim().length === 0) allFilled = false;
+          });
+          if (allFilled) {
+            loginBtn.classList.add('visible');
+          } else {
+            loginBtn.classList.remove('visible');
+          }
+        });
+        box.addEventListener('keydown', function(e) {
+          if (e.key === 'Backspace' && this.value.length === 0 && index > 0) {
+            otpBoxes[index - 1].focus();
+          }
+        });
+      });
+
     });
   </script>
+
+  <!-- SMS integration now handled via Firebase + Cloud Functions in app.html -->
 </body>
 
 </html>
